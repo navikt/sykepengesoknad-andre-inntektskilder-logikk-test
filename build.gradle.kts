@@ -10,7 +10,7 @@ plugins {
 
 group = "no.nav.helse.flex"
 version = "1.0.0"
-description = "sykepengesoknad-korrigering-metrikk"
+description = "sykepengesoknad-andre-inntektskilder-logikk-test"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 ext["okhttp3.version"] = "4.9.0" // For at token support testen kjører (tror jeg)

@@ -1,4 +1,4 @@
-# sykepengesoknad-korrigering-metrikk
+# sykepengesoknad-andre-inntektskilder-logikk-test
 Lytter på kafka og publiserer diverse metrikker til grafana
 
 # Komme i gang

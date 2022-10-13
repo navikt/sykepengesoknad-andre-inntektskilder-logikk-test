@@ -18,7 +18,7 @@ spring:
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      group-id: "sykepengesoknad-korrigering-metrikk"
+      group-id: "sykepengesoknad-andre-inntektskilder-logikk-test"
       max-poll-records: 1
       auto-offset-reset: latest
       enable-auto-commit: false

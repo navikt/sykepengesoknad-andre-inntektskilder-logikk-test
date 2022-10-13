@@ -1,1 +1,1 @@
-rootProject.name = "sykepengesoknad-korrigering-metrikk"
+rootProject.name = "sykepengesoknad-andre-inntektskilder-logikk-test"

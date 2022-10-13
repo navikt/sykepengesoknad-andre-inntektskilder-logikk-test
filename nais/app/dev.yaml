@@ -1,4 +1,4 @@
-app: sykepengesoknad-korrigering-metrikk
+app: sykepengesoknad-andre-inntektskilder-logikk-test
 namespace: flex
 team: flex
 kafkaPool: nav-dev
