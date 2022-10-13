@@ -4,6 +4,7 @@ import no.nav.helse.flex.bigquery.NyttGenerertSporsmalTable
 import no.nav.helse.flex.bigquery.NyttSporsmal
 import no.nav.helse.flex.client.ereg.EregClient
 import no.nav.helse.flex.client.inntektskomponenten.InntektskomponentenClient
+import no.nav.helse.flex.serialisertTilString
 import no.nav.helse.flex.sykepengesoknad.kafka.*
 import org.springframework.stereotype.Component
 import java.time.Instant
@@ -59,7 +60,7 @@ class NyttGenerertSporsmal(
                 nyttSporsmal = skapSporsmal(soknad.arbeidsgiver!!.navn!!, inntekterOrgnavn),
                 sykmeldingOrgnummer = sykmeldingOrgnummer,
                 sykmeldingOrgnavn = sykmeldingOrgnavn,
-                orgnumreFraInntektskomponenten = soknad.id,
+                orgnumreFraInntektskomponenten = inntekterOrgnummer.serialisertTilString(),
                 haddeSykmeldingensOrgnummerHosInntektskomponenten = inntekterOrgnummer.contains(soknad.arbeidsgiver?.orgnummer),
                 antallArbeidsforhold = inntekterOrgnummer.size,
                 latencyEreg = (etterEreg.toEpochMilli() - førEreg.toEpochMilli()).toInt(),
