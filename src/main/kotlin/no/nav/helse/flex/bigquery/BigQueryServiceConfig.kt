@@ -15,4 +15,4 @@ class BigQueryServiceConfig {
     }
 }
 
-const val dataset = "andre_inntektskilder_nytt_spm"
+const val dataset = "korrigering_metrikk"

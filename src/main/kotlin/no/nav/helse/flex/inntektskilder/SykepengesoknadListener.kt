@@ -21,7 +21,7 @@ class SykepengesoknadListener(
         topics = [FLEX_SYKEPENGESOKNAD_TOPIC],
         id = "nytt-generert-sporsmal-listener",
         idIsGroup = false,
-        groupId = "nytt-generert-inntektskilde-sporsmal-1"
+        groupId = "nytt-generert-inntektskilde-sporsmal-2"
     )
     fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
 
