@@ -41,8 +41,8 @@ class AadRestTemplateConfiguration {
         val clientProperties = clientConfigurationProperties.registration[registrationName]
             ?: throw RuntimeException("Fant ikke config for $registrationName")
         return restTemplateBuilder
-            .setConnectTimeout(Duration.ofSeconds(2))
-            .setReadTimeout(Duration.ofSeconds(3))
+            .setConnectTimeout(Duration.ofMillis(200))
+            .setReadTimeout(Duration.ofMillis(1000))
             .additionalInterceptors(bearerTokenInterceptor(clientProperties, oAuth2AccessTokenService))
             .build()
     }
