@@ -1,7 +1,7 @@
 package no.nav.helse.flex.client.inntektskomponenten
 
 data class HentInntekterResponse(
-    val arbeidsInntektMaaned: List<ArbeidsInntektMaaned>,
+    val arbeidsInntektMaaned: List<ArbeidsInntektMaaned> = emptyList(),
     val ident: Ident
 )
 
@@ -27,5 +27,5 @@ data class ArbeidsInntektMaaned(
 )
 
 data class ArbeidsInntektInformasjon(
-    val inntektListe: List<InntektListe>
+    val inntektListe: List<InntektListe> = emptyList()
 )
