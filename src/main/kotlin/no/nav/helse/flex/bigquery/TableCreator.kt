@@ -36,6 +36,8 @@ class TableCreator(
                 Field.newBuilder("orgnumreFraInntektskomponenten", StandardSQLTypeName.STRING).setDescription("Alle orgnumre fra inntektskomponenten").build(),
                 Field.newBuilder("haddeSykmeldingensOrgnummerHosInntektskomponenten", StandardSQLTypeName.BOOL).setDescription("Om vi fant orgnummeret i inntektskomp").build(),
                 Field.newBuilder("antallArbeidsforhold", StandardSQLTypeName.NUMERIC).setDescription("Antall arbeidsforhold fra inntektskomp").build(),
+                Field.newBuilder("latencyInntektskomp", StandardSQLTypeName.NUMERIC).setDescription("Tid brukt på å kalle inntektskomp").build(),
+                Field.newBuilder("latencyEreg", StandardSQLTypeName.NUMERIC).setDescription("Tid brukt på å kalle ereg").build(),
             )
         )
     }

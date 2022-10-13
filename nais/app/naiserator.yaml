@@ -37,7 +37,7 @@ spec:
       memory: 400Mi
   gcp:
     bigQueryDatasets:
-      - name: andre_inntektskilder_logikk_test
+      - name: andre_inntektskilder_nytt_spm
         permission: READWRITE
   kafka:
     pool: {{kafkaPool}}
