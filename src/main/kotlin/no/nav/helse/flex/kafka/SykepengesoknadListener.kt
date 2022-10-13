@@ -8,11 +8,13 @@ import no.nav.helse.flex.metrikker.StudierEtterBegyntSykefravaer
 import no.nav.helse.flex.objectMapper
 import no.nav.helse.flex.sykepengesoknad.kafka.SykepengesoknadDTO
 import org.apache.kafka.clients.consumer.ConsumerRecord
+import org.springframework.context.annotation.Profile
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
 
 @Component
+@Profile("test")
 class SykepengesoknadListener(
     private val jobbetUnderveisTimerProsent: JobbetUnderveisTimerProsent,
     private val studierEtterBegyntSykefravaer: StudierEtterBegyntSykefravaer,
@@ -38,4 +40,5 @@ class SykepengesoknadListener(
         acknowledgment.acknowledge()
     }
 }
+
 fun String.tilSykepengesoknadDTO(): SykepengesoknadDTO = objectMapper.readValue(this)
