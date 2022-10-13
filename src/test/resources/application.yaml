@@ -36,3 +36,6 @@ no.nav.security.jwt:
           client-id: client-id
           client-secret: secretzz
           client-auth-method: client_secret_basic
+
+FLEX_FSS_PROXY_URL: "http://flex"
+EREG_URL: "http://ereg"

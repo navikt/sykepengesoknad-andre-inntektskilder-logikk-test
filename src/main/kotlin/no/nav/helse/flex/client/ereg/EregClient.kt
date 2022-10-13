@@ -1,6 +1,7 @@
 package no.nav.helse.flex.client.ereg
 
 import no.nav.helse.flex.logger
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -13,6 +14,8 @@ import org.springframework.web.util.UriComponentsBuilder
 @Component
 class EregClient(
     private val plainRestTemplate: RestTemplate,
+    @Value("\${EREG_URL}") private val eregUrl: String,
+
 ) {
 
     val log = logger()
@@ -20,7 +23,7 @@ class EregClient(
     fun hentBedrift(virksomhetsnummer: String): Nokkelinfo {
 
         val uriBuilder =
-            UriComponentsBuilder.fromHttpUrl("http://sykepengesoknad-backend/api/v3/soknader/$virksomhetsnummer/kafkaformat")
+            UriComponentsBuilder.fromHttpUrl("$eregUrl/v1/organisasjon/$virksomhetsnummer/noekkelinfo")
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON

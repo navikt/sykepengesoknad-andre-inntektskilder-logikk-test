@@ -1,6 +1,8 @@
 package no.nav.helse.flex.client.inntektskomponenten
 
 import no.nav.helse.flex.logger
+import no.nav.helse.flex.serialisertTilString
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -14,6 +16,8 @@ import java.time.YearMonth
 @Component
 class InntektskomponentenClient(
     private val flexFssProxyRestTemplate: RestTemplate,
+    @Value("\${FLEX_FSS_PROXY_URL}") private val flexFssProxyUrl: String,
+
 ) {
 
     val log = logger()
@@ -21,7 +25,7 @@ class InntektskomponentenClient(
     fun hentInntekter(fnr: String, fom: YearMonth, tom: YearMonth): HentInntekterResponse {
 
         val uriBuilder =
-            UriComponentsBuilder.fromHttpUrl("http://sykepengesoknad-backend/api/v3/soknader/$fnr/kafkaformat")
+            UriComponentsBuilder.fromHttpUrl("$flexFssProxyUrl/api/inntektskomponenten/api/v1/hentinntektliste")
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
@@ -29,8 +33,20 @@ class InntektskomponentenClient(
         val result = flexFssProxyRestTemplate
             .exchange(
                 uriBuilder.toUriString(),
-                HttpMethod.GET,
-                HttpEntity<Any>(headers),
+                HttpMethod.POST,
+                HttpEntity(
+                    mapOf(
+                        "ident" to mapOf(
+                            "identifikator" to fnr,
+                            "aktoerType" to "NATURLIG_IDENT"
+                        ),
+                        "ainntektsfilter" to "8-28",
+                        "formaal" to "Foreldrepenger",
+                        "maanedFom" to fom,
+                        "maanedTom" to tom
+                    ).serialisertTilString(),
+                    headers
+                ),
                 HentInntekterResponse::class.java
             )
 

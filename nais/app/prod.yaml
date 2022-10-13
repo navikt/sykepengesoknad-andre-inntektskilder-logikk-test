@@ -5,3 +5,5 @@ kafkaPool: nav-prod
 azureTenant: nav.no
 env:
   FLEX_FSS_PROXY_AAD_CLIENT_ID: prod-fss.flex.flex-fss-proxy
+  FLEX_FSS_PROXY_URL: https://flex-fss-proxy.prod-fss-pub.nais.io
+  EREG_URL: https://ereg-services.prod-fss-pub.nais.io
