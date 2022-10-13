@@ -14,7 +14,6 @@ import java.time.LocalDate
 import java.time.ZoneOffset
 
 @Component
-@Profile("test")
 class SykepengesoknadListener(
     private val nyttGenerertSporsmal: NyttGenerertSporsmal,
 ) : ConsumerSeekAware {
