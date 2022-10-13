@@ -38,6 +38,8 @@ private fun NyttSporsmal.tilMap(): Map<String, Any> {
     data["orgnumreFraInntektskomponenten"] = orgnumreFraInntektskomponenten
     data["haddeSykmeldingensOrgnummerHosInntektskomponenten"] = haddeSykmeldingensOrgnummerHosInntektskomponenten
     data["antallArbeidsforhold"] = antallArbeidsforhold
+    data["latencyInntektskomp"] = latencyInntektskomp
+    data["latencyEreg"] = latencyEreg
 
     return data.toMap()
 }
@@ -50,4 +52,6 @@ data class NyttSporsmal(
     val orgnumreFraInntektskomponenten: String,
     val haddeSykmeldingensOrgnummerHosInntektskomponenten: Boolean,
     val antallArbeidsforhold: Int,
+    val latencyInntektskomp: Int,
+    val latencyEreg: Int,
 )
