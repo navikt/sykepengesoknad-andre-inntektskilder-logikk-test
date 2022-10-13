@@ -1,8 +1,9 @@
-package no.nav.helse.flex.korrigeringer
+package no.nav.helse.flex.inntektskilder
 
-import no.nav.helse.flex.kafka.FLEX_SYKEPENGESOKNAD_TOPIC
-import no.nav.helse.flex.kafka.tilSykepengesoknadDTO
+import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.helse.flex.logger
+import no.nav.helse.flex.objectMapper
+import no.nav.helse.flex.sykepengesoknad.kafka.SykepengesoknadDTO
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.context.annotation.Profile
 import org.springframework.kafka.annotation.KafkaListener
@@ -11,25 +12,25 @@ import org.springframework.stereotype.Component
 
 @Component
 @Profile("test")
-class KorrigerteSoknaderDataproduktListener(
-    private val korrigerteSoknaderDataprodukt: KorrigerteSoknaderDataprodukt,
+class SykepengesoknadListener(
+    private val nyttGenerertSporsmal: NyttGenerertSporsmal,
 ) {
 
     private val log = logger()
 
     @KafkaListener(
         topics = [FLEX_SYKEPENGESOKNAD_TOPIC],
-        id = "korrigerte-soknader-dataprodukt-listener",
-        groupId = "korrigerte-soknader-dataprodukt-listener-4",
-        properties = ["auto.offset.reset = earliest"],
+        id = "prometheus-metrikker-listener",
+        idIsGroup = false,
     )
     fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
 
         val soknad = cr.value().tilSykepengesoknadDTO()
 
-        log.debug("Mottok soknad ${soknad.id} med status ${soknad.status}")
+        nyttGenerertSporsmal.finnNyttSporsmal(soknad)
 
-        korrigerteSoknaderDataprodukt.finnKorrigerteSporsmal(soknad)
         acknowledgment.acknowledge()
     }
 }
+
+fun String.tilSykepengesoknadDTO(): SykepengesoknadDTO = objectMapper.readValue(this)

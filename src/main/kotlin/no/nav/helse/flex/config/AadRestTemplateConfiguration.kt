@@ -19,13 +19,13 @@ import org.springframework.web.client.RestTemplate
 class AadRestTemplateConfiguration {
 
     @Bean
-    fun sykepengesoknadBackendRestTemplate(
+    fun flexFssProxyRestTemplate(
         restTemplateBuilder: RestTemplateBuilder,
         clientConfigurationProperties: ClientConfigurationProperties,
         oAuth2AccessTokenService: OAuth2AccessTokenService
     ): RestTemplate =
         downstreamRestTemplate(
-            registrationName = "sykepengesoknad-backend-client-credentials",
+            registrationName = "flex-fss-proxy-client-credentials",
             restTemplateBuilder = restTemplateBuilder,
             clientConfigurationProperties = clientConfigurationProperties,
             oAuth2AccessTokenService = oAuth2AccessTokenService,

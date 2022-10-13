@@ -1,4 +1,4 @@
-package no.nav.helse.flex.kafka
+package no.nav.helse.flex.inntektskilder
 
 import no.nav.helse.flex.logger
 import org.apache.kafka.clients.consumer.Consumer

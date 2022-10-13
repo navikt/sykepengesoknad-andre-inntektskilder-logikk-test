@@ -28,7 +28,7 @@ spring:
 no.nav.security.jwt:
   client:
     registration:
-      sykepengesoknad-backend-client-credentials:
+      flex-fss-proxy-client-credentials:
         token-endpoint-url: http://localhost:${mock-oauth2-server.port}/azureator/token
         grant-type: client_credentials
         scope: flex-fss-proxy

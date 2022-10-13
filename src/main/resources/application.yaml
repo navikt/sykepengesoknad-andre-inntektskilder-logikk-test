@@ -21,7 +21,7 @@ spring:
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      group-id: "sykepengesoknad-andre-inntektskilder-logikk-test"
+      group-id: "sykepengesoknad-andre-inntektskilder-logikk-test-2"
       max-poll-records: 1
       auto-offset-reset: latest #TODO sett til none når offsett er etablert i prod
       enable-auto-commit: false
@@ -31,7 +31,6 @@ management:
   endpoints.web:
     base-path: /internal
     exposure.include: health,prometheus
-    path-mapping.prometheus: /prometheus
 
 logging.config: "classpath:logback.xml"
 
@@ -39,10 +38,10 @@ logging.config: "classpath:logback.xml"
 no.nav.security.jwt:
   client:
     registration:
-      sykepengesoknad-backend-client-credentials:
+      flex-fss-proxy-client-credentials:
         token-endpoint-url: https://login.microsoftonline.com/${AZURE_APP_TENANT_ID}/oauth2/v2.0/token
         grant-type: client_credentials
-        scope: api://${SYKEPENGESOKNAD_BACKEND_AAD_CLIENT_ID}/.default
+        scope: api://${FLEX_FSS_PROXY_AAD_CLIENT_ID}/.default
         authentication:
           client-id: ${AZURE_APP_CLIENT_ID}
           client-secret: ${AZURE_APP_CLIENT_SECRET}

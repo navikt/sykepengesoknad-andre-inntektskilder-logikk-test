@@ -1,4 +1,4 @@
-package no.nav.helse.flex.kafka
+package no.nav.helse.flex.inntektskilder
 
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.context.annotation.Bean
