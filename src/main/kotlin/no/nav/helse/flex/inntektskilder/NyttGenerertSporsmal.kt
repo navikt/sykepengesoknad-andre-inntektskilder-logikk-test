@@ -34,12 +34,7 @@ class NyttGenerertSporsmal(
             return
         }
 
-        val førPing = Instant.now()
         isaliveClient.ping()
-        Instant.now().let {
-            val pingTid = (it.toEpochMilli() - førPing.toEpochMilli()).toInt()
-            log.info("Latency mot flex-fss-proxy isALive $pingTid ms")
-        }
 
         val sykmeldingOrgnummer = soknad.arbeidsgiver!!.orgnummer!!
         val sykmeldingOrgnavn = soknad.arbeidsgiver!!.navn!!
