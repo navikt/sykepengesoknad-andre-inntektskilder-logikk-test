@@ -1,9 +1,11 @@
 package no.nav.helse.flex.inntektskilder
 
+import io.micrometer.core.instrument.MeterRegistry
 import no.nav.helse.flex.bigquery.NyttGenerertSporsmalTable
 import no.nav.helse.flex.bigquery.NyttSporsmal
 import no.nav.helse.flex.client.ereg.EregClient
 import no.nav.helse.flex.client.inntektskomponenten.InntektskomponentenClient
+import no.nav.helse.flex.logger
 import no.nav.helse.flex.serialisertTilString
 import no.nav.helse.flex.sykepengesoknad.kafka.*
 import org.springframework.stereotype.Component
@@ -15,8 +17,12 @@ import java.time.YearMonth
 class NyttGenerertSporsmal(
     val nyttGenerertSporsmalTable: NyttGenerertSporsmalTable,
     val inntektskomponentenClient: InntektskomponentenClient,
-    val eregClient: EregClient
+    val eregClient: EregClient,
+    private val registry: MeterRegistry
+
 ) {
+
+    val log = logger()
 
     fun finnNyttSporsmal(soknad: SykepengesoknadDTO) {
         if (soknad.status != SoknadsstatusDTO.SENDT) {
@@ -54,6 +60,10 @@ class NyttGenerertSporsmal(
             .map { it.navn.navnelinje1 }
         val etterEreg = Instant.now()
 
+        val latencyInntektskomp = (etterInntektskomp.toEpochMilli() - førInntektskomp.toEpochMilli()).toInt()
+        log.info("Latency mot flex-fss-proxy / inntektskomp $latencyInntektskomp ms")
+
+        registry.counter("spormsmal_generert").increment()
         nyttGenerertSporsmalTable.lagreNyttSporsmal(
             NyttSporsmal(
                 sykepengesoknadId = soknad.id,
@@ -64,7 +74,7 @@ class NyttGenerertSporsmal(
                 haddeSykmeldingensOrgnummerHosInntektskomponenten = inntekterOrgnummer.contains(soknad.arbeidsgiver?.orgnummer),
                 antallArbeidsforhold = inntekterOrgnummer.size,
                 latencyEreg = (etterEreg.toEpochMilli() - førEreg.toEpochMilli()).toInt(),
-                latencyInntektskomp = (etterInntektskomp.toEpochMilli() - førInntektskomp.toEpochMilli()).toInt()
+                latencyInntektskomp = latencyInntektskomp
             )
         )
     }
