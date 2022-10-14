@@ -41,6 +41,8 @@ class IsaliveClient2(
                 forward
             )
 
+        responseEntity.toString()
+
         Instant.now().let {
             val pingTid = (it.toEpochMilli() - førPing.toEpochMilli()).toInt()
             log.info("Latency mot flex-fss-proxy isALive med resttemplate med auth $pingTid ms")
