@@ -16,7 +16,7 @@ class IsaliveClient(
 
     fun ping() {
         val førPing = Instant.now()
-        URL("$flexFssProxyUrl/internal/isAlive").content
+        URL("$flexFssProxyUrl/api/ping").content
         Instant.now().let {
             val pingTid = (it.toEpochMilli() - førPing.toEpochMilli()).toInt()
             log.info("Latency mot flex-fss-proxy isALive $pingTid ms")

@@ -33,7 +33,7 @@ class IsaliveClient2(
         val forward: RequestEntity<Any> = RequestEntity(
             nyeHeaders,
             HttpMethod.GET,
-            URI("$flexFssProxyUrl/internal/isAlive")
+            URI("$flexFssProxyUrl/api/ping")
         )
 
         val responseEntity: ResponseEntity<Any> = flexFssProxyRestTemplate
