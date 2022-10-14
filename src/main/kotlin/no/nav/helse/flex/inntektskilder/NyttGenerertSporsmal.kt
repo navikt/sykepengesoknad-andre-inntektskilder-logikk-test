@@ -5,6 +5,7 @@ import no.nav.helse.flex.bigquery.NyttGenerertSporsmalTable
 import no.nav.helse.flex.bigquery.NyttSporsmal
 import no.nav.helse.flex.client.ereg.EregClient
 import no.nav.helse.flex.client.inntektskomponenten.InntektskomponentenClient
+import no.nav.helse.flex.client.inntektskomponenten.IsaliveClient
 import no.nav.helse.flex.logger
 import no.nav.helse.flex.serialisertTilString
 import no.nav.helse.flex.sykepengesoknad.kafka.*
@@ -17,6 +18,7 @@ import java.time.YearMonth
 class NyttGenerertSporsmal(
     val nyttGenerertSporsmalTable: NyttGenerertSporsmalTable,
     val inntektskomponentenClient: InntektskomponentenClient,
+    val isaliveClient: IsaliveClient,
     val eregClient: EregClient,
     private val registry: MeterRegistry
 
@@ -30,6 +32,13 @@ class NyttGenerertSporsmal(
         }
         if (soknad.type != SoknadstypeDTO.ARBEIDSTAKERE) {
             return
+        }
+
+        val førPing = Instant.now()
+        isaliveClient.ping()
+        Instant.now().let {
+            val pingTid = (it.toEpochMilli() - førPing.toEpochMilli()).toInt()
+            log.info("Latency mot flex-fss-proxy isALive $pingTid ms")
         }
 
         val sykmeldingOrgnummer = soknad.arbeidsgiver!!.orgnummer!!
