@@ -5,14 +5,18 @@ import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import no.nav.security.token.support.client.spring.oauth2.EnableOAuth2Client
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
+import org.apache.http.client.config.RequestConfig
+import org.apache.http.impl.client.CloseableHttpClient
+import org.apache.http.impl.client.HttpClients
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpRequest
 import org.springframework.http.client.ClientHttpRequestExecution
 import org.springframework.http.client.ClientHttpRequestInterceptor
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.web.client.RestTemplate
-import java.time.Duration
 
 @EnableJwtTokenValidation
 @EnableOAuth2Client(cacheEnabled = true)
@@ -32,6 +36,24 @@ class AadRestTemplateConfiguration {
             oAuth2AccessTokenService = oAuth2AccessTokenService,
         )
 
+    @Bean
+    fun httpClient(): CloseableHttpClient {
+        val requestConfig: RequestConfig = RequestConfig.custom()
+            .setConnectionRequestTimeout(1000)
+            .setConnectTimeout(200)
+            .setSocketTimeout(1000).build()
+        return HttpClients.custom()
+            .setDefaultRequestConfig(requestConfig)
+            .setConnectionManager(poolingHttpClientConnectionManager())
+            .build()
+    }
+
+    private fun poolingHttpClientConnectionManager(): PoolingHttpClientConnectionManager {
+        val connManager = PoolingHttpClientConnectionManager()
+        connManager.maxTotal = 5
+        return connManager
+    }
+
     private fun downstreamRestTemplate(
         restTemplateBuilder: RestTemplateBuilder,
         clientConfigurationProperties: ClientConfigurationProperties,
@@ -41,8 +63,7 @@ class AadRestTemplateConfiguration {
         val clientProperties = clientConfigurationProperties.registration[registrationName]
             ?: throw RuntimeException("Fant ikke config for $registrationName")
         return restTemplateBuilder
-            .setConnectTimeout(Duration.ofMillis(200))
-            .setReadTimeout(Duration.ofMillis(3000))
+            .requestFactory { HttpComponentsClientHttpRequestFactory(httpClient()) }
             .additionalInterceptors(bearerTokenInterceptor(clientProperties, oAuth2AccessTokenService))
             .build()
     }
