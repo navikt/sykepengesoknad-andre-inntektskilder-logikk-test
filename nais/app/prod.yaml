@@ -3,6 +3,7 @@ namespace: flex
 team: flex
 kafkaPool: nav-prod
 azureTenant: nav.no
+ingress: https://sykepengesoknad-andre-inntektskilder-logikk.intern.nav.no
 env:
   FLEX_FSS_PROXY_AAD_CLIENT_ID: prod-fss.flex.flex-fss-proxy
   FLEX_FSS_PROXY_URL: https://flex-fss-proxy.prod-fss-pub.nais.io

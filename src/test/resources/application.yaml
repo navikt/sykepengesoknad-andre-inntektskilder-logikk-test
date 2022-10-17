@@ -39,3 +39,4 @@ no.nav.security.jwt:
 
 FLEX_FSS_PROXY_URL: "http://flex"
 EREG_URL: "http://ereg"
+SHARED_SECRET: bla

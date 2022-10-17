@@ -1,7 +1,7 @@
 package no.nav.helse.flex.inntektskilder
 
 fun skapSporsmal(sykmeldingOrgnavn: String, andreOrgnavn: List<String>): String {
-    val listen = mutableListOf(sykmeldingOrgnavn).also { it.addAll(andreOrgnavn) }
+    val listen = mutableListOf(sykmeldingOrgnavn).also { it.addAll(andreOrgnavn) }.map { it.prettyOrgnavn() }
 
     fun virksomheterTekst(): String {
         if (listen.size < 3) {

@@ -14,6 +14,8 @@ spec:
     max: 1
     cpuThresholdPercentage: 90
   port: 8080
+  ingresses:
+    - {{ingress}}
   liveness:
     path: /internal/health
     initialDelay: 10
@@ -45,6 +47,8 @@ spec:
     application:
       enabled: true
       tenant: {{azureTenant}}
+  envFrom:
+    - secret: andre-inntektskilder-logikk-secret
   env:
   {{#each env}}
      - name: {{@key}}

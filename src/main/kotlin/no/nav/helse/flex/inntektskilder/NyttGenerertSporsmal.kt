@@ -83,6 +83,5 @@ class NyttGenerertSporsmal(
             )
         )
     }
-
-    fun LocalDate.yearMonth() = YearMonth.from(this)
 }
+fun LocalDate.yearMonth() = YearMonth.from(this)
