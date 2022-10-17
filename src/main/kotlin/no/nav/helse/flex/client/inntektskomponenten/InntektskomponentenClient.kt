@@ -41,7 +41,7 @@ class InntektskomponentenClient(
                             "aktoerType" to "NATURLIG_IDENT"
                         ),
                         "ainntektsfilter" to "8-28",
-                        "formaal" to "Foreldrepenger",
+                        "formaal" to "Sykepenger",
                         "maanedFom" to fom,
                         "maanedTom" to tom
                     ).serialisertTilString(),
