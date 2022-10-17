@@ -4,6 +4,7 @@ import io.micrometer.core.instrument.MeterRegistry
 import no.nav.helse.flex.bigquery.NyttGenerertSporsmalTable
 import no.nav.helse.flex.bigquery.NyttSporsmal
 import no.nav.helse.flex.client.ereg.EregClient
+import no.nav.helse.flex.client.inntektskomponenten.ArbeidsInntektMaaned
 import no.nav.helse.flex.client.inntektskomponenten.InntektskomponentenClient
 import no.nav.helse.flex.logger
 import no.nav.helse.flex.serialisertTilString
@@ -44,29 +45,34 @@ class NyttGenerertSporsmal(
             )
         val etterInntektskomp = Instant.now()
 
-        val arbeidsforholdtyper =
-            hentInntekter.arbeidsInntektMaaned
-                .flatMap { it.arbeidsInntektInformasjon.arbeidsforholdListe }
-                .map { it.arbeidsforholdstype }
+        fun ArbeidsInntektMaaned.orgnumreForManed(): Set<String> {
+            val frilansArbeidsforholdOrgnumre = this.arbeidsInntektInformasjon.arbeidsforholdListe
+                .filter { it.arbeidsforholdstype == "frilanserOppdragstakerHonorarPersonerMm" }
+                .map { it.arbeidsgiver.identifikator }
+                .toSet()
 
-        val inntekterOrgnummer = hentInntekter
-            .arbeidsInntektMaaned
-            .flatMap { it.arbeidsInntektInformasjon.inntektListe }
-            .filter { it.inntektType == "LOENNSINNTEKT" }
-            .filter { it.virksomhet.aktoerType == "ORGANISASJON" }
-            .map { it.virksomhet.identifikator }
-            .toSet()
+            val inntekterOrgnummer = this.arbeidsInntektInformasjon.inntektListe
+                .filter { it.inntektType == "LOENNSINNTEKT" }
+                .filter { it.virksomhet.aktoerType == "ORGANISASJON" }
+                .map { it.virksomhet.identifikator }
+                .toSet()
+                .subtract(frilansArbeidsforholdOrgnumre)
+
+            return inntekterOrgnummer.subtract(frilansArbeidsforholdOrgnumre)
+        }
+
+        val alleMånedersOrgnr = hentInntekter.arbeidsInntektMaaned.flatMap { it.orgnumreForManed() }.toSet()
 
         val førEreg = Instant.now()
 
-        val inntekterOrgnavn = inntekterOrgnummer
+        val inntekterOrgnavn = alleMånedersOrgnr
             .filter { it != sykmeldingOrgnummer }
             .map { eregClient.hentBedrift(it) }
             .map { it.navn.navnelinje1 }
         val etterEreg = Instant.now()
 
         val latencyInntektskomp = (etterInntektskomp.toEpochMilli() - førInntektskomp.toEpochMilli()).toInt()
-        log.info("Latency mot flex-fss-proxy / inntektskomp $latencyInntektskomp ms. Arbeidsforhold typer $arbeidsforholdtyper -  inntekter lengde ${inntekterOrgnummer.size} - arbeidsforholdtyper lengde ${arbeidsforholdtyper.size}")
+        log.info("Latency mot flex-fss-proxy / inntektskomp $latencyInntektskomp ms")
 
         registry.counter("spormsmal_generert").increment()
         nyttGenerertSporsmalTable.lagreNyttSporsmal(
@@ -75,13 +81,14 @@ class NyttGenerertSporsmal(
                 nyttSporsmal = skapSporsmal(soknad.arbeidsgiver!!.navn!!, inntekterOrgnavn),
                 sykmeldingOrgnummer = sykmeldingOrgnummer,
                 sykmeldingOrgnavn = sykmeldingOrgnavn,
-                orgnumreFraInntektskomponenten = inntekterOrgnummer.serialisertTilString(),
-                haddeSykmeldingensOrgnummerHosInntektskomponenten = inntekterOrgnummer.contains(soknad.arbeidsgiver?.orgnummer),
-                antallArbeidsforhold = inntekterOrgnummer.size,
+                orgnumreFraInntektskomponenten = alleMånedersOrgnr.serialisertTilString(),
+                haddeSykmeldingensOrgnummerHosInntektskomponenten = alleMånedersOrgnr.contains(soknad.arbeidsgiver?.orgnummer),
+                antallArbeidsforhold = alleMånedersOrgnr.size,
                 latencyEreg = (etterEreg.toEpochMilli() - førEreg.toEpochMilli()).toInt(),
                 latencyInntektskomp = latencyInntektskomp
             )
         )
     }
 }
+
 fun LocalDate.yearMonth() = YearMonth.from(this)
