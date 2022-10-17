@@ -44,7 +44,7 @@ class DebugController(
             req,
             headers,
             HttpMethod.POST,
-            URI("$flexFssProxyUrl/api/inntektskomponenten/api/v1/hentinntektliste")
+            URI("$flexFssProxyUrl/api/inntektskomponenten/api/v1/hentinntektliste/debug")
         )
 
         val responseEntity: ResponseEntity<Any> = flexFssProxyRestTemplate.exchange(forward)
