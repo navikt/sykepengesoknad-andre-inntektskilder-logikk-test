@@ -3,6 +3,8 @@ namespace: flex
 team: flex
 kafkaPool: nav-prod
 azureTenant: nav.no
+replicas_min: 3
+replicas_max: 3
 env:
   FLEX_FSS_PROXY_AAD_CLIENT_ID: prod-fss.flex.flex-fss-proxy
   FLEX_FSS_PROXY_URL: https://flex-fss-proxy.prod-fss-pub.nais.io
