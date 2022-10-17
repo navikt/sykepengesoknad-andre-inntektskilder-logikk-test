@@ -35,15 +35,12 @@ class InntektskomponentenClient(
                 uriBuilder.toUriString(),
                 HttpMethod.POST,
                 HttpEntity(
-                    mapOf(
-                        "ident" to mapOf(
-                            "identifikator" to fnr,
-                            "aktoerType" to "NATURLIG_IDENT"
-                        ),
-                        "ainntektsfilter" to "8-28",
-                        "formaal" to "Sykepenger",
-                        "maanedFom" to fom,
-                        "maanedTom" to tom
+                    HentInntekterRequest(
+                        maanedFom = fom,
+                        maanedTom = tom,
+                        formaal = "Sykepenger",
+                        ainntektsfilter = "8-28",
+                        ident = Aktoer(identifikator = fnr, aktoerType = "NATURLIG_IDENT")
                     ).serialisertTilString(),
                     headers
                 ),
@@ -51,14 +48,14 @@ class InntektskomponentenClient(
             )
 
         if (result.statusCode != OK) {
-            val message = "Kall mot syfosoknad feiler med HTTP-" + result.statusCode
+            val message = "Kall mot inntektskomponenten feiler med HTTP-" + result.statusCode
             log.error(message)
             throw RuntimeException(message)
         }
 
         result.body?.let { return it }
 
-        val message = "Kall mot syfosoknad returnerer ikke data"
+        val message = "Kall mot inntektskomponenten returnerer ikke data"
         log.error(message)
         throw RuntimeException(message)
     }

@@ -10,7 +10,6 @@ import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
 
 @Component
-@Profile("test")
 class SykepengesoknadListener(
     private val nyttGenerertSporsmal: NyttGenerertSporsmal,
 ) {
