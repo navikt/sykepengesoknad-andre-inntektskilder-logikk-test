@@ -41,7 +41,7 @@ class AadRestTemplateConfiguration {
         val requestConfig: RequestConfig = RequestConfig.custom()
             .setConnectionRequestTimeout(1000)
             .setConnectTimeout(200)
-            .setSocketTimeout(1500).build()
+            .setSocketTimeout(4000).build()
         return HttpClients.custom()
             .setDefaultRequestConfig(requestConfig)
             .setConnectionManager(poolingHttpClientConnectionManager())
