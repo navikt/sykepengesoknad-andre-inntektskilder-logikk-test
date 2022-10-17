@@ -5,7 +5,6 @@ import no.nav.helse.flex.bigquery.NyttGenerertSporsmalTable
 import no.nav.helse.flex.bigquery.NyttSporsmal
 import no.nav.helse.flex.client.ereg.EregClient
 import no.nav.helse.flex.client.inntektskomponenten.InntektskomponentenClient
-import no.nav.helse.flex.client.inntektskomponenten.IsaliveClient2
 import no.nav.helse.flex.logger
 import no.nav.helse.flex.serialisertTilString
 import no.nav.helse.flex.sykepengesoknad.kafka.*
@@ -18,7 +17,6 @@ import java.time.YearMonth
 class NyttGenerertSporsmal(
     val nyttGenerertSporsmalTable: NyttGenerertSporsmalTable,
     val inntektskomponentenClient: InntektskomponentenClient,
-    val isaliveClient2: IsaliveClient2,
     val eregClient: EregClient,
     private val registry: MeterRegistry
 
@@ -33,8 +31,6 @@ class NyttGenerertSporsmal(
         if (soknad.type != SoknadstypeDTO.ARBEIDSTAKERE) {
             return
         }
-
-        isaliveClient2.ping()
 
         val sykmeldingOrgnummer = soknad.arbeidsgiver!!.orgnummer!!
         val sykmeldingOrgnavn = soknad.arbeidsgiver!!.navn!!
