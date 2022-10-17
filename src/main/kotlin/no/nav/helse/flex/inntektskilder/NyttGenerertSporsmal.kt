@@ -47,7 +47,7 @@ class NyttGenerertSporsmal(
         val arbeidsforholdtyper =
             hentInntekter.arbeidsInntektMaaned
                 .flatMap { it.arbeidsInntektInformasjon.arbeidsforholdListe }
-                .map { it.arbeidsforholdstype }.toSet()
+                .map { it.arbeidsforholdstype }
 
         val inntekterOrgnummer = hentInntekter
             .arbeidsInntektMaaned
@@ -66,7 +66,7 @@ class NyttGenerertSporsmal(
         val etterEreg = Instant.now()
 
         val latencyInntektskomp = (etterInntektskomp.toEpochMilli() - førInntektskomp.toEpochMilli()).toInt()
-        log.info("Latency mot flex-fss-proxy / inntektskomp $latencyInntektskomp ms. Arbeidsforhold typer $arbeidsforholdtyper")
+        log.info("Latency mot flex-fss-proxy / inntektskomp $latencyInntektskomp ms. Arbeidsforhold typer $arbeidsforholdtyper -  inntekter lengde ${inntekterOrgnummer.size} - arbeidsforholdtyper lengde ${arbeidsforholdtyper.size}")
 
         registry.counter("spormsmal_generert").increment()
         nyttGenerertSporsmalTable.lagreNyttSporsmal(
